@@ -1,9 +1,8 @@
 pipeline {
 agent any
 
-```
 environment {
-    APP_SERVER = "54.210.182.203"   
+    APP_SERVER = "172.31.24.41"   
 }
 
 stages {
@@ -91,6 +90,6 @@ post {
         sh 'docker images | head -10 || true'
     }
 }
-```
+
 
 }
