@@ -3,12 +3,6 @@ pipeline {
 
     stages {
 
-        stage('Checkout') {
-            steps {
-                git 'https://github.com/Dharunr257/production-ready-two-tier-flask-app.git'
-            }
-        }
-
         stage('Install Dependencies') {
             steps {
                 sh '''
