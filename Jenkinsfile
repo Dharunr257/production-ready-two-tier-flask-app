@@ -7,8 +7,10 @@ pipeline {
             steps {
                 sh '''
                 python3 -m venv venv
-                . venv/bin/activate
-                pip install -r requirements.txt
+
+                ./venv/bin/python -m pip install --upgrade pip
+
+                ./venv/bin/pip install -r requirements.txt
                 '''
             }
         }
@@ -16,8 +18,7 @@ pipeline {
         stage('Run Tests') {
             steps {
                 sh '''
-                . venv/bin/activate
-                pytest test_app.py
+                ./venv/bin/pytest test_app.py
                 '''
             }
         }
