@@ -22,5 +22,19 @@ pipeline {
                 '''
             }
         }
+
+        stage('Build Docker Image') {
+            steps {
+                sh '''
+                docker build -t production-ready-two-tier-flask-app:latest .
+                '''
+            }
+        }
+    }
+
+    post {
+        always {
+            sh 'docker images | head -10'
+        }
     }
 }
