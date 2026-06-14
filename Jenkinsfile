@@ -46,6 +46,11 @@ pipeline {
                 trivy image \
                 --scanners vuln \
                 production-ready-two-tier-flask-app:latest
+
+
+                echo "======================================="
+                echo "Trivy Security Scan Completed"
+                echo "======================================="
                 '''
             }
         }
