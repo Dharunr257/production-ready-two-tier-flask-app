@@ -184,7 +184,19 @@ body {
     transition: var(--theme-transition);
 }
 
-thead th {
+.table > tbody > tr > td {
+    color: var(--table-color) !important;
+}
+
+.table > tbody > tr > td.text-info {
+    color: var(--text-info-color) !important;
+}
+
+.table > tbody > tr > td.text-muted {
+    color: var(--text-muted) !important;
+}
+
+.table thead th {
     font-weight: 600;
     text-transform: uppercase;
     font-size: 0.75rem;
