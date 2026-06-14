@@ -1,95 +1,98 @@
 pipeline {
-agent any
 
-environment {
-    APP_SERVER = "172.31.24.41"   
-}
+    agent any
 
-stages {
+    stages {
 
-    stage('Install Dependencies') {
-        steps {
-            sh '''
-            python3 -m venv venv
+        stage('Checkout Source Code') {
+            steps {
+                checkout scm
+            }
+        }
 
-            ./venv/bin/python -m pip install --upgrade pip
+        stage('Install Dependencies') {
+            steps {
+                sh '''
+                python3 -m venv venv
 
-            ./venv/bin/pip install -r requirements.txt
-            '''
+                ./venv/bin/python -m pip install --upgrade pip
+
+                ./venv/bin/pip install -r requirements.txt
+                '''
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                sh '''
+                ./venv/bin/pytest test_app.py
+                '''
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                sh '''
+                docker build -t production-ready-two-tier-flask-app:latest .
+                '''
+            }
+        }
+
+        stage('Trivy Security Scan') {
+            steps {
+                sh '''
+                sudo trivy image \
+                --scanners vuln \
+                production-ready-two-tier-flask-app:latest
+                '''
+            }
+        }
+
+        stage('Deploy To Application Server') {
+            steps {
+                sh '''
+                echo "Starting deployment..."
+
+                ssh app-server "/home/ubuntu/deployment/deploy.sh"
+                '''
+            }
+        }
+
+        stage('Health Check') {
+            steps {
+                sh '''
+                echo "Running post-deployment health check..."
+
+                ssh app-server "curl -f http://localhost:5000/health"
+                '''
+            }
         }
     }
 
-    stage('Run Tests') {
-        steps {
+    post {
+
+        success {
+
+            echo '======================================='
+            echo 'PIPELINE SUCCESSFUL'
+            echo 'Application Deployed Successfully'
+            echo '======================================='
+        }
+
+        failure {
+
+            echo '======================================='
+            echo 'PIPELINE FAILED'
+            echo 'Check Jenkins Console Output'
+            echo '======================================='
+        }
+
+        always {
+
             sh '''
-            ./venv/bin/pytest test_app.py
+            echo "Docker Images:"
+            docker images | head -10 || true
             '''
         }
     }
-
-    stage('Build Docker Image') {
-        steps {
-            sh '''
-            docker build -t production-ready-two-tier-flask-app:latest .
-            '''
-        }
-    }
-
-    stage('Trivy Security Scan') {
-        steps {
-            sh '''
-            sudo trivy image \
-            --scanners vuln \
-            production-ready-two-tier-flask-app:latest
-            '''
-        }
-    }
-
-    stage('Deploy To Application Server') {
-        steps {
-            sh '''
-            ssh -o StrictHostKeyChecking=no ubuntu@$APP_SERVER "
-
-            cd ~/production-ready-two-tier-flask-app &&
-
-            git pull &&
-
-            docker compose down &&
-
-            docker compose up -d --build
-
-            "
-            '''
-        }
-    }
-
-    stage('Health Check') {
-        steps {
-            sh '''
-            ssh -o StrictHostKeyChecking=no ubuntu@$APP_SERVER "
-
-            curl -f http://localhost:5000/health
-
-            "
-            '''
-        }
-    }
-}
-
-post {
-
-    success {
-        echo 'Deployment Successful'
-    }
-
-    failure {
-        echo 'Pipeline Failed'
-    }
-
-    always {
-        sh 'docker images | head -10 || true'
-    }
-}
-
-
 }
