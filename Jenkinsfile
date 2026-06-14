@@ -41,7 +41,9 @@ pipeline {
         stage('Trivy Security Scan') {
             steps {
                 sh '''
-                sudo trivy image \
+                echo "Starting Trivy Scan..."
+
+                trivy image \
                 --scanners vuln \
                 production-ready-two-tier-flask-app:latest
                 '''
