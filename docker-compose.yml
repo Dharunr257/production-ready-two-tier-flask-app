@@ -13,6 +13,7 @@ services:
       - mysql_data:/var/lib/mysql
     networks:
       - flask-app-network  
+    restart: unless-stopped  
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-ppassword"]
       interval: 10s
@@ -33,6 +34,7 @@ services:
       - "5000:5000"
     networks:
       - flask-app-network  
+    restart: unless-stopped  
     depends_on:
       - mysql
     healthcheck:
