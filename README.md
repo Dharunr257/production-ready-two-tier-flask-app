@@ -120,8 +120,8 @@ Two EC2 instances are launched in the same Default VPC with separate Security Gr
 **Jenkins Server**
 ```
 Name          : jenkins-server
-Instance Type : t2.micro
-OS            : Ubuntu 24.04 LTS
+Instance Type : t3.micro
+OS            : Ubuntu 26.04 LTS
 Storage       : 20 GB
 Security Group: Inbound — SSH (22) from My IP | Jenkins UI (8080) from My IP
                 Outbound — All Traffic
@@ -131,8 +131,8 @@ IAM Role      : Jenkins-Role (CloudWatchAgentServerPolicy)
 **Application Server**
 ```
 Name          : application-server
-Instance Type : t2.micro
-OS            : Ubuntu 24.04 LTS
+Instance Type : t3.micro
+OS            : Ubuntu 26.04 LTS
 Storage       : 20 GB
 Security Group: Inbound — SSH (22) from My IP | HTTP (80) from My IP
                            SSH (22) from Jenkins-SG only
@@ -397,9 +397,9 @@ These were actual blockers encountered and debugged during the build:
 
 | Problem | Root Cause | Solution |
 |---|---|---|
-| Jenkins executor waiting — pipeline stuck | Low memory on t2.micro during heavy builds | Workspace cleanup + build optimization |
+| Jenkins executor waiting — pipeline stuck | Low memory on t3.micro during heavy builds | Workspace cleanup + build optimization |
 | Trivy database download failing | Disk quota exceeded on Jenkins server | Trivy cache cleanup + config to limit DB size |
-| Python `externally managed environment` error | Ubuntu 24.04 blocks global pip installs | Used explicit venv binary paths in Jenkinsfile |
+| Python `externally managed environment` error | Ubuntu 26.04 blocks global pip installs | Used explicit venv binary paths in Jenkinsfile |
 | Docker permission denied inside Jenkins | Jenkins user not in Docker group | `sudo usermod -aG docker jenkins` + restart |
 | SSH deployment failing silently | Key mismatch + StrictHostKeyChecking blocking | Dedicated deploy key + explicit SSH config block |
 
