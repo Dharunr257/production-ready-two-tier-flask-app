@@ -244,7 +244,8 @@ def delete_employee(id):
 @app.route('/health')
 def health():
     """Health check endpoint for platform, load balancer, and pipeline tests."""
-    return jsonify({"status": "healthy"})
+    # return jsonify({"status": "healthy"})
+    return "broken", 500
 
 # ----------------- Main Entrypoint -----------------
 

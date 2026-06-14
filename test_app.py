@@ -11,7 +11,7 @@ def client():
 
 def test_health_endpoint(client):
     """Verifies that the GET /health endpoint returns a 200 OK status code and correct JSON payload."""
-    response = client.get('//health')
+    response = client.get('/health')
     assert response.status_code == 200
     assert response.get_json() == {"status": "healthy"}
 
