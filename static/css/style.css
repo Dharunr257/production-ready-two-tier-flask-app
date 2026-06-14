@@ -30,6 +30,8 @@
     --toggle-btn-color: #cbd5e1;
     --toggle-btn-bg: rgba(255, 255, 255, 0.05);
     --toggle-btn-border: rgba(255, 255, 255, 0.1);
+    --text-muted: #94a3b8;
+    --text-info-color: #38bdf8;
     
     --theme-transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
@@ -66,6 +68,8 @@ html[data-theme="light"] {
     --toggle-btn-color: #475569;
     --toggle-btn-bg: rgba(0, 0, 0, 0.03);
     --toggle-btn-border: rgba(0, 0, 0, 0.1);
+    --text-muted: #64748b;
+    --text-info-color: #0284c7;
 }
 
 body {
@@ -325,4 +329,18 @@ thead th {
 /* Alert close button adjustments for light/dark mode */
 .btn-close-white {
     filter: var(--btn-close-filter);
+}
+
+/* Muted and Info text overrides for theme consistency */
+.text-muted {
+    color: var(--text-muted) !important;
+}
+.text-info {
+    color: var(--text-info-color) !important;
+}
+
+/* Table hover color override */
+.table-hover > tbody > tr:hover > * {
+    background-color: var(--btn-outline-glass-bg) !important;
+    color: var(--text-color) !important;
 }
